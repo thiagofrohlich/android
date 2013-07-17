@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.ufpr.casaminha.MainActivity"
+            android:name="com.ufpr.casaminha.controller.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,19 +23,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ufpr.casaminha.Buscar"
+            android:name="com.ufpr.casaminha.controller.Buscar"
             android:label="@string/title_activity_buscar" >
         </activity>
         <activity
-            android:name="com.ufpr.casaminha.Relatorio"
+            android:name="com.ufpr.casaminha.controller.Relatorio"
             android:label="@string/title_activity_relatorio" >
         </activity>
         <activity
-            android:name="com.ufpr.casaminha.Inserir"
+            android:name="com.ufpr.casaminha.controller.Inserir"
             android:label="@string/title_activity_inserir" >
         </activity>
         <activity
-            android:name="com.ufpr.casaminha.Detalhe"
+            android:name="com.ufpr.casaminha.controller.Detalhe"
             android:label="@string/title_activity_detalhe" >
         </activity>
     </application>

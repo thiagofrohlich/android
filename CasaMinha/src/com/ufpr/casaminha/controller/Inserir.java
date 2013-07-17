@@ -1,4 +1,6 @@
-package com.ufpr.casaminha;
+package com.ufpr.casaminha.controller;
+
+import com.ufpr.casaminha.R;
 
 import android.os.Bundle;
 import android.app.Activity;

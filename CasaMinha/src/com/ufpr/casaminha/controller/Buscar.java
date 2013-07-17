@@ -1,15 +1,20 @@
-package com.ufpr.casaminha;
+package com.ufpr.casaminha.controller;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.CursorAdapter;
+
+import com.ufpr.casaminha.R;
 
 public class Buscar extends Activity {
+	
+	private CursorAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,5 +45,21 @@ public class Buscar extends Activity {
 			conteudo.addView(listagem);
 		}
 	}
+	
+	private class GetHousesTask extends AsyncTask<Object, Object, Cursor>{
+		DatabaseConnector conector = new DatabaseConnector(Buscar.this);
+
+		@Override
+		protected Cursor doInBackground(Object... params) {
+			conector.open();
+			return conector.getAll();
+		}
+		
+		@Override
+		protected void onPostExecute(Cursor result) {
+//			contactAdapter.changeCursor(result);
+			conector.close();
+		}
+	}	
 
 }
