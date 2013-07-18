@@ -59,10 +59,10 @@ public class MainActivity extends Activity {
 			
 			conector.open();
 			
-			conector.insert("CASA", 1d, 0d, "AQUELA RUA", 2);
+		/*	conector.insert("CASA", 1d, 0d, "AQUELA RUA", 2);
 			conector.insert("CASA", 2d, 0d, "AQUELA RUA 2", 2);
 			conector.insert("CASA", 3d, 0d, "AQUELA RUA 3", 2);
-			conector.insert("CASA", 4d, 0d, "AQUELA RUA 4", 2);
+			conector.insert("CASA", 4d, 0d, "AQUELA RUA 4", 2);*/
 			
 			Log.i(CATEGORIA, "db populado");
 			return null;

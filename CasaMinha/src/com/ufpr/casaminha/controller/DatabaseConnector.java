@@ -1,6 +1,7 @@
 package com.ufpr.casaminha.controller;
 
 import com.ufpr.casaminha.model.DatabaseOpenHelper;
+import com.ufpr.casaminha.model.Imovel;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,14 +33,14 @@ public class DatabaseConnector {
 	}
 	
 	// Inserir Casa
-	public void insert(String tipo, Double valor, Double valorCondominio, String endereco, Integer qtdQuartos) {
+	public void insert(Imovel imovel) {
 		
 		ContentValues newHouse = new ContentValues();
-		newHouse.put("tipo", tipo);
-		newHouse.put("valor", valor);
-		newHouse.put("valor_condominio", valorCondominio);
-		newHouse.put("endereco", endereco);
-		newHouse.put("qtd_quartos", qtdQuartos);
+		newHouse.put("tipo", imovel.getTipo());
+		newHouse.put("valor", imovel.getValor());
+		newHouse.put("valor_condominio", imovel.getValorCondominio());
+		newHouse.put("endereco", imovel.getEndereco());
+		newHouse.put("qtd_quartos", imovel.getQtdQuartos());
 		
 		open();
 		database.insert(TABLE_HOUSES, null, newHouse);
