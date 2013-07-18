@@ -26,17 +26,17 @@ public class Buscar extends Activity {
 		
 		String from[] = new String[] {"valor"};
 		int to[] = {R.id.listagemImoveis};
-		adapter = new SimpleCursorAdapter(Buscar.this, R.id.listagemImoveis, null, from, to);
+		adapter = new SimpleCursorAdapter(Buscar.this, R.layout.lista_imoveis, null, from, null);
 		
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemImoveis);
 		
 		View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
-		listagem.setTag(adapter);
 		conteudo.addView(listagem);
 		
 		new GetHousesTask().execute((Object[]) null);
 		
+//		adapter.getCursor().
 		
 //		for(int x=0; x<=3; x++) {
 //			View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
@@ -83,14 +83,12 @@ public class Buscar extends Activity {
 
 		@Override
 		protected Cursor doInBackground(Object... params) {
-			Log.d(MainActivity.CATEGORIA, "buscando casas");
 			conector.open();
 			return conector.getAll();
 		}
 		
 		@Override
 		protected void onPostExecute(Cursor result) {
-			Log.d(MainActivity.CATEGORIA, "populando tela");
 			adapter.changeCursor(result);
 			conector.close();
 		}

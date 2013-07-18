@@ -66,7 +66,7 @@ public class DatabaseConnector {
 	
 	// Buscar todas as casas
 	public Cursor getAll() {
-		return database.query(TABLE_HOUSES, new String[] {"tipo", "valor", "valor_condominio", "endereco", "qtd_quartos"}, null, null, null, null, "valor");
+		return database.query(TABLE_HOUSES, new String[] {"_id", "tipo", "valor", "valor_condominio", "endereco", "qtd_quartos"}, null, null, null, null, "valor");
 	}
 	
 	// Buscar por id
