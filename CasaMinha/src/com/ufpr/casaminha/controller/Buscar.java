@@ -9,24 +9,29 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.SimpleCursorAdapter;
 
 import com.ufpr.casaminha.R;
 
 public class Buscar extends Activity {
 	
-	private CursorAdapter adapter;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_buscar);
 		
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+//		LayoutInflater inflater = LayoutInflater.from();
 		ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemImoveis);
-		for(int x=0; x<=3; x++) {
-			View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
-			conteudo.addView(listagem);
-		}
+		
+//		View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
+		View listagem = inflater.inflate(R.layout.lista_imoveis, conteudo);
+		conteudo.addView(listagem);
+
+//		for(int x=0; x<=3; x++) {
+//			View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
+//			conteudo.addView(listagem);
+//		}
 	}
 
 	@Override
@@ -46,20 +51,5 @@ public class Buscar extends Activity {
 		}
 	}
 	
-	private class GetHousesTask extends AsyncTask<Object, Object, Cursor>{
-		DatabaseConnector conector = new DatabaseConnector(Buscar.this);
-
-		@Override
-		protected Cursor doInBackground(Object... params) {
-			conector.open();
-			return conector.getAll();
-		}
-		
-		@Override
-		protected void onPostExecute(Cursor result) {
-//			contactAdapter.changeCursor(result);
-			conector.close();
-		}
-	}	
 
 }
