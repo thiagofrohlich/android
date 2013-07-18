@@ -73,5 +73,9 @@ public class DatabaseConnector {
 	public Cursor getOne(Long id) {
 		return database.query(TABLE_HOUSES, null, "_id=" + id, null, null, null, null);
 	}
+	
+	public Cursor findByEndereco(Imovel imovel){
+		return database.query(TABLE_HOUSES, null, "endereco=" + imovel.getEndereco(), null, null, null, null);
+	}
 
 }

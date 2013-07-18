@@ -74,6 +74,7 @@ public class Buscar extends Activity {
 		@Override
 		protected Cursor doInBackground(Object... params) {
 			conector.open();
+		
 			return conector.getAll();
 		}
 		
