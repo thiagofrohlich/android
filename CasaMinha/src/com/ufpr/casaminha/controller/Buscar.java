@@ -1,9 +1,11 @@
 package com.ufpr.casaminha.controller;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -15,19 +17,27 @@ import com.ufpr.casaminha.R;
 
 public class Buscar extends Activity {
 	
+	private CursorAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_buscar);
 		
+		String from[] = new String[] {"valor"};
+		int to[] = {R.id.listagemImoveis};
+		adapter = new SimpleCursorAdapter(Buscar.this, R.id.listagemImoveis, null, from, to);
+		
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//		LayoutInflater inflater = LayoutInflater.from();
 		ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemImoveis);
 		
-//		View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
-		View listagem = inflater.inflate(R.layout.lista_imoveis, conteudo);
+		View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
+		listagem.setTag(adapter);
 		conteudo.addView(listagem);
-
+		
+		new GetHousesTask().execute((Object[]) null);
+		
+		
 //		for(int x=0; x<=3; x++) {
 //			View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
 //			conteudo.addView(listagem);
@@ -51,5 +61,39 @@ public class Buscar extends Activity {
 		}
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		new GetHousesTask().execute((Object[]) null);
+	}
+	
+	@Override
+	protected void onStop() {
+		Cursor cursor = adapter.getCursor();
+		if(cursor != null) 
+			cursor.deactivate();
+		
+		adapter.changeCursor(null);
+		super.onStop();
+	}
+	
+	private class GetHousesTask extends AsyncTask<Object, Object, Cursor>{
+		
+		DatabaseConnector conector = new DatabaseConnector(Buscar.this);
+
+		@Override
+		protected Cursor doInBackground(Object... params) {
+			Log.d(MainActivity.CATEGORIA, "buscando casas");
+			conector.open();
+			return conector.getAll();
+		}
+		
+		@Override
+		protected void onPostExecute(Cursor result) {
+			Log.d(MainActivity.CATEGORIA, "populando tela");
+			adapter.changeCursor(result);
+			conector.close();
+		}
+	}
 
 }

@@ -16,10 +16,10 @@ public class HouseList extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.i(MainActivity.CATEGORIA, "onCreate HouseList");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista_imoveis);
-		
-		Log.i(MainActivity.CATEGORIA, "onCreate HouseList");
 		
 		String from[] = new String[] {"valor"};
 		int to[] = {R.id.listagemImoveis};
