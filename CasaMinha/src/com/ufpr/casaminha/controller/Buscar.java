@@ -1,6 +1,7 @@
 package com.ufpr.casaminha.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -105,15 +107,30 @@ public class Buscar extends Activity {
 				TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
 				tipo.setText(result.getString(result.getColumnIndexOrThrow("tipo")));
 				
+				Log.d(MainActivity.CATEGORIA, ""+result.getLong(result.getColumnIndexOrThrow("_id")));
+				listagem.setId((int) result.getLong(result.getColumnIndexOrThrow("_id")));
+				Log.d(MainActivity.CATEGORIA, ""+listagem.getId());
+				
+				listagem.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View view) {
+						
+						Log.i(MainActivity.CATEGORIA, "id view: "+view.getId());
+						Intent it = new Intent(view.getContext(), Detalhe.class);
+						it.putExtra("idCasa", view.getId());
+						
+						startActivity(it);
+						
+					}
+				});
+				
 				conteudo.addView(listagem);
 			}
 			
 			if(result.getCount() == 0) {
-				View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
-				
-				TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
-				endereco.setText(getResources().getString(R.string.noneFound));
-				
+				Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.noneFound), Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			
 			conector.close();
