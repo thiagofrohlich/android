@@ -81,6 +81,7 @@ public class Buscar extends Activity {
 				return conector.filtrar(tipo, qtdQuartos, valor);
 			}
 		
+		
 			return conector.getAll();
 			
 		}
