@@ -93,8 +93,9 @@ public class Inserir extends Activity {
 				
 			};
 			saveTask.execute((Object[]) null);
+			mensagem = "Imóvel salvo";
 		}
-		Toast toast = Toast.makeText(getApplicationContext(),"Imóvel salvo", Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(getApplicationContext(),mensagem, Toast.LENGTH_SHORT);
 		toast.show();
 		
 		

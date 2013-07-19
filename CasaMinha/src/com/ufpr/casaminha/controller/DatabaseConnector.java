@@ -42,6 +42,7 @@ public class DatabaseConnector {
 		newHouse.put("valor_condominio", imovel.getValorCondominio());
 		newHouse.put("endereco", imovel.getEndereco());
 		newHouse.put("qtd_quartos", imovel.getQtdQuartos());
+		newHouse.put("vendido", "true");
 		
 		open();
 		database.insert(TABLE_HOUSES, null, newHouse);
@@ -107,6 +108,10 @@ public class DatabaseConnector {
 
 	public Cursor findByEndereco(Imovel imovel){
 		return database.query(TABLE_HOUSES, null, "endereco=" + imovel.getEndereco(), null, null, null, null);
+	}
+	
+	public Cursor findVendidos(){
+		return database.query(TABLE_HOUSES, null, "vendido = 'true'", null, null, null, null);
 	}
 
 }
