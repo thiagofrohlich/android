@@ -72,10 +72,15 @@ public class Inserir extends Activity {
 				save();
 				return null;
 			}
+			@Override
+			protected void onPostExecute(Object result){
+				finish();
+			}
 			
 		};
 		saveTask.execute((Object[]) null);
-		
+		Toast toast = Toast.makeText(getApplicationContext(),"Imóvel salvo", Toast.LENGTH_SHORT);
+		toast.show();
 		
 		
 		
@@ -84,12 +89,7 @@ public class Inserir extends Activity {
 	public void save(){
 		DatabaseConnector dbConnector = new DatabaseConnector(Inserir.this);
 		dbConnector.insert(imovel);
-		Cursor result = dbConnector.findByEndereco(imovel);
-		CharSequence text = "Salvo "+result.getString(result.getColumnIndexOrThrow("tipo"))+
-				" no endereço "+ result.getString(result.getColumnIndexOrThrow("endereco"))+
-				"valor "+result.getString(result.getColumnIndexOrThrow("valor"));
-		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-		toast.show();
+		
 	}
 	
 	@Override
