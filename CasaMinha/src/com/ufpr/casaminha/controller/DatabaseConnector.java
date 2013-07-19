@@ -1,13 +1,14 @@
 package com.ufpr.casaminha.controller;
 
-import com.ufpr.casaminha.model.DatabaseOpenHelper;
-import com.ufpr.casaminha.model.Imovel;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.ufpr.casaminha.model.DatabaseOpenHelper;
+import com.ufpr.casaminha.model.Imovel;
 
 public class DatabaseConnector {
 	
@@ -72,6 +73,40 @@ public class DatabaseConnector {
 	// Buscar por id
 	public Cursor getOne(Long id) {
 		return database.query(TABLE_HOUSES, null, "_id=" + id, null, null, null, null);
+	}
+	
+	public void truncate() {
+		String sql = "DELETE FROM "+ TABLE_HOUSES + ";";
+		Log.d(MainActivity.CATEGORIA, sql);
+		database.execSQL(sql);
+	}
+	
+	public Cursor filtrar(String tipo, Integer qtdQuartos, Double valor) {
+		if(tipo == null && qtdQuartos == null && valor == null) return getAll();
+		
+		StringBuffer where = new StringBuffer();
+		
+		boolean fTipo = false, fQuartos = false, fValor = false;
+		if(tipo != null && !tipo.trim().equals("")) fTipo = true;
+		if(qtdQuartos != null && qtdQuartos > 0) fQuartos = true;
+		if(valor != null && valor > 0) fValor = true;
+		
+		if(fTipo) {
+			where.append(" tipo='"+ tipo.toUpperCase() + "'");
+			if(fQuartos || fValor) where.append(" and");
+		}
+		if(fQuartos) {
+			where.append(" qtd_quartos="+ qtdQuartos);
+			if(fValor) where.append(" and");
+		}
+		if(fValor) where.append(" valor="+ valor);
+		
+		Log.d(MainActivity.CATEGORIA, where.toString());
+		return database.query(TABLE_HOUSES, null, where.toString(), null, null, null, "valor");
+	}
+
+	public Cursor findByEndereco(Imovel imovel){
+		return database.query(TABLE_HOUSES, null, "endereco=" + imovel.getEndereco(), null, null, null, null);
 	}
 
 }

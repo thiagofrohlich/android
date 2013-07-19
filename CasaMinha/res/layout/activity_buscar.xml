@@ -85,14 +85,14 @@
 
     <ScrollView
         android:id="@+id/scrollLista"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3" >
 
         <LinearLayout
             android:id="@+id/listagemImoveis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <!-- Inflate com a listagem dos imóveis vendidos. Usar template lista_imoveis.xml -->

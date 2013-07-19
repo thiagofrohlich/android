@@ -17,6 +17,7 @@
     <string name="endHint">Rua do Sol, 23</string>
     <string name="tipo_prompt">—</string>
     <string name="quartos_prompt">—</string>
+    <string name="noneFound">Nenhum registro encontrado</string>
 
     <string-array name="tipo_arrays">
         <item>Casa na rua</item>

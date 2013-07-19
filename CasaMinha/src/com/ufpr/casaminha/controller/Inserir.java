@@ -1,7 +1,7 @@
 package com.ufpr.casaminha.controller;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -10,12 +10,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.ufpr.casaminha.R;
 import com.ufpr.casaminha.model.Imovel;
 
 public class Inserir extends Activity {
 
+	Imovel imovel;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,21 +50,60 @@ public class Inserir extends Activity {
 	}
 
 	public void onClick(View view){
+		boolean erro = false;
+		String mensagem = "";
+		Double valor = null;
 		String tipo = (String) ((Spinner) findViewById(R.id.tipo_spinner)).getSelectedItem();
-		Double vCondominio;
+		Double vCondominio = null;
 		if(tipo.equals("Casa na rua")){
 			vCondominio = 0.00;
 		}else{
-			vCondominio = Double.parseDouble(((EditText) findViewById(R.id.valorC)).getText().toString());
+			try{
+				vCondominio = Double.parseDouble(((EditText) findViewById(R.id.valorC)).getText().toString());
+			}catch(Exception e){
+				erro = true;
+				mensagem = "Insira um valor de condomínio válido\n";
+			}
 		}
 		String endereco = ((EditText) findViewById(R.id.endereco)).getText().toString();
+		if(endereco.equals("")){
+			erro = true;
+			mensagem = mensagem + "Insira um endereço válido\n";
+		}
 		Integer quartos = Integer.parseInt((String) ((Spinner) findViewById(R.id.qtos_spinner)).getSelectedItem());
-		Double valor = Double.parseDouble(((EditText) findViewById(R.id.valor_et)).getText().toString());
-		Imovel imovel = new Imovel(tipo, valor, vCondominio, endereco, quartos);
+		try{
+			valor = Double.parseDouble(((EditText) findViewById(R.id.valor_et)).getText().toString());
+		}catch (Exception e){
+			erro = true;
+			mensagem = mensagem+"Insira um valor de venda válido";
+		}
+		if(!erro){
+			imovel = new Imovel(tipo, valor, vCondominio, endereco, quartos);
+			AsyncTask<Object, Object, Object> saveTask = new AsyncTask<Object, Object, Object>(){
+				
+				@Override
+				protected Object doInBackground(Object... params) {
+					save();
+					return null;
+				}
+				@Override
+				protected void onPostExecute(Object result){
+					finish();
+				}
+				
+			};
+			saveTask.execute((Object[]) null);
+		}
+		Toast toast = Toast.makeText(getApplicationContext(),"Imóvel salvo", Toast.LENGTH_SHORT);
+		toast.show();
+		
+		
+		
+	}
+	
+	public void save(){
 		DatabaseConnector dbConnector = new DatabaseConnector(Inserir.this);
 		dbConnector.insert(imovel);
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i);
 		
 	}
 	

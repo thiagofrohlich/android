@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.ufpr.casaminha.R;
+import com.ufpr.casaminha.model.Imovel;
 
 public class MainActivity extends Activity {
 	
@@ -19,7 +20,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        populate();
+//        Usar o método abaixo caso precise popular a tabela para testes
+//        populate();
     }
 
 
@@ -59,10 +61,11 @@ public class MainActivity extends Activity {
 			
 			conector.open();
 			
-		/*	conector.insert("CASA", 1d, 0d, "AQUELA RUA", 2);
-			conector.insert("CASA", 2d, 0d, "AQUELA RUA 2", 2);
-			conector.insert("CASA", 3d, 0d, "AQUELA RUA 3", 2);
-			conector.insert("CASA", 4d, 0d, "AQUELA RUA 4", 2);*/
+			conector.truncate();
+			conector.insert(new Imovel("CASA NA RUA", 1d, 0d, "AQUELA RUA", 2));
+			conector.insert(new Imovel("CASA NA RUA", 2d, 0d, "AQUELA RUA 2", 2));
+			conector.insert(new Imovel("CASA NA RUA", 3d, 0d, "AQUELA RUA 3", 2));
+			conector.insert(new Imovel("CASA NA RUA", 4d, 0d, "AQUELA RUA 4", 2));
 			
 			Log.i(CATEGORIA, "db populado");
 			return null;
@@ -74,6 +77,6 @@ public class MainActivity extends Activity {
 			conector.close();
 		}
 		
-	}    
+	}
     
 }
