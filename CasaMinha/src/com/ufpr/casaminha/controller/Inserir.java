@@ -32,7 +32,7 @@ public class Inserir extends Activity {
 			public void onItemSelected(AdapterView<?> parent, View arg1,
 					int pos, long arg3) {
 				String tipo = parent.getItemAtPosition(pos).toString();
-				if(tipo.equals("Casa na rua")){
+				if(tipo.equalsIgnoreCase(Imovel.CASA_NA_RUA)){
 					EditText vCondominio = (EditText) findViewById(R.id.valorC);
 					vCondominio.setEnabled(false);
 				}else{

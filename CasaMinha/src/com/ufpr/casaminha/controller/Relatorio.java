@@ -1,9 +1,9 @@
 package com.ufpr.casaminha.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.ufpr.casaminha.R;
+import com.ufpr.casaminha.model.Imovel;
 
 public class Relatorio extends Activity {
 
@@ -40,37 +41,37 @@ public class Relatorio extends Activity {
 	}
 	
 	
-private class GetHousesTask extends AsyncTask<Object, Object, Cursor>{
+private class GetHousesTask extends AsyncTask<Object, Object, List<Imovel>>{
 		
 		DatabaseConnector conector = new DatabaseConnector(Relatorio.this);
 
 		@Override
-		protected Cursor doInBackground(Object... params) {
+		protected List<Imovel> doInBackground(Object... params) {
 			conector.open();
 		
 			return conector.findVendidos();
 		}
 		
 		@Override
-		protected void onPostExecute(Cursor result) {
+		protected void onPostExecute(List<Imovel> result) {
 			ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemRelatorio);
 			BigDecimal total = new BigDecimal(0);
-			for(int i=0; i < result.getCount(); i++) {
+			
+			for (Imovel imovel : result) {
 				View listagem = inflater.inflate(R.layout.lista_relatorio, (ViewGroup) findViewById(R.layout.lista_relatorio));
-				result.moveToPosition(i);
 				
 				TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
-				endereco.setText(result.getString(result.getColumnIndexOrThrow("endereco")));
-				
 				TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
-				tipo.setText(result.getString(result.getColumnIndexOrThrow("tipo")));
-				
 				TextView valor = (TextView) listagem.findViewById(R.id.vlrIm);
-				valor.setText(String.valueOf(result.getDouble(result.getColumnIndexOrThrow("valor"))));
-				total = total.add( new BigDecimal( result.getDouble( result.getColumnIndexOrThrow("valor") ) ) ).setScale(2, BigDecimal.ROUND_HALF_UP);
 				
+				endereco.setText(imovel.getEndereco());
+				tipo.setText(imovel.getTipo());
+				valor.setText(""+imovel.getValor());
+				
+				total = total.add( new BigDecimal( imovel.getValor() ) ).setScale(2, BigDecimal.ROUND_HALF_UP);
 				conteudo.addView(listagem);
 			}
+			
 			TextView somatoria = (TextView) findViewById(R.id.somatoria);
 			somatoria.setText(String.valueOf(total.doubleValue()));
 			conector.close();

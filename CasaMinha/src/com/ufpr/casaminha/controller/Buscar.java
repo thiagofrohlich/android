@@ -1,8 +1,9 @@
 package com.ufpr.casaminha.controller;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ufpr.casaminha.R;
+import com.ufpr.casaminha.model.Imovel;
 
 public class Buscar extends Activity {
 	
@@ -68,12 +70,12 @@ public class Buscar extends Activity {
 		new GetHousesTask().execute(new Object[] {tipoCasa, qtdQuartosCasa, this.valorCasa});
 	}
 	
-	private class GetHousesTask extends AsyncTask<Object, Object, Cursor>{
+	private class GetHousesTask extends AsyncTask<Object, Object, List<Imovel>>{
 		
 		DatabaseConnector conector = new DatabaseConnector(Buscar.this);
 
 		@Override
-		protected Cursor doInBackground(Object... params) {
+		protected List<Imovel> doInBackground(Object... params) {
 			conector.open();
 			
 			if(params != null) {
@@ -89,50 +91,46 @@ public class Buscar extends Activity {
 		}
 		
 		@Override
-		protected void onPostExecute(Cursor result) {
+		protected void onPostExecute(List<Imovel> result) {
 			ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemImoveis);
 			conteudo.removeAllViews();
 			
-			Log.d(MainActivity.CATEGORIA, "result count: "+ result.getCount());
-			
-			for(int i=0; i < result.getCount(); i++) {
-				View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
-				
-				// Aponta para o registro
-				result.moveToPosition(i);
-				
-				TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
-				endereco.setText(result.getString(result.getColumnIndexOrThrow("endereco")));
-				
-				TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
-				tipo.setText(result.getString(result.getColumnIndexOrThrow("tipo")));
-				
-				Log.d(MainActivity.CATEGORIA, ""+result.getLong(result.getColumnIndexOrThrow("_id")));
-				listagem.setId((int) result.getLong(result.getColumnIndexOrThrow("_id")));
-				Log.d(MainActivity.CATEGORIA, ""+listagem.getId());
-				
-				listagem.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View view) {
-						
-						Log.i(MainActivity.CATEGORIA, "id view: "+view.getId());
-						Intent it = new Intent(view.getContext(), Detalhe.class);
-						it.putExtra("idCasa", view.getId());
-						
-						startActivity(it);
-						
-					}
-				});
-				
-				conteudo.addView(listagem);
-			}
-			
-			if(result.getCount() == 0) {
+			if(result == null || result.isEmpty()) {
 				Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.noneFound), Toast.LENGTH_SHORT);
 				toast.show();
-			}
+			} else {
 			
+				for (Imovel imovel : result) {
+					View listagem = inflater.inflate(R.layout.lista_imoveis, (ViewGroup) findViewById(R.layout.lista_imoveis));
+					
+					TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
+					TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
+					
+					endereco.setText(imovel.getEndereco());
+					tipo.setText(imovel.getTipo());
+					
+					Log.d(MainActivity.CATEGORIA, ""+ imovel.getId());
+					listagem.setId(imovel.getId().intValue());
+					Log.d(MainActivity.CATEGORIA, ""+ listagem.getId());
+					
+					listagem.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View view) {
+							
+							Log.i(MainActivity.CATEGORIA, "id view: "+view.getId());
+							Intent it = new Intent(view.getContext(), Detalhe.class);
+							it.putExtra("idCasa", view.getId());
+							
+							startActivity(it);
+							
+						}
+					});
+					
+					conteudo.addView(listagem);
+				}
+			}
+				
 			conector.close();
 		}
 	}
