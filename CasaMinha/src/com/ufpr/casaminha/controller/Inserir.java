@@ -53,6 +53,7 @@ public class Inserir extends Activity {
 		boolean erro = false;
 		String mensagem = "";
 		Double valor = null;
+		Integer quartos = null;
 		String tipo = (String) ((Spinner) findViewById(R.id.tipo_spinner)).getSelectedItem();
 		Double vCondominio = null;
 		if(tipo.equals("Casa na rua")){
@@ -70,7 +71,9 @@ public class Inserir extends Activity {
 			erro = true;
 			mensagem = mensagem + "Insira um endereço válido\n";
 		}
-		Integer quartos = Integer.parseInt((String) ((Spinner) findViewById(R.id.qtos_spinner)).getSelectedItem());
+		
+			quartos = Integer.parseInt(((String) ((Spinner) findViewById(R.id.qtos_spinner)).getSelectedItem()).substring(0, 1));
+		
 		try{
 			valor = Double.parseDouble(((EditText) findViewById(R.id.valor_et)).getText().toString());
 		}catch (Exception e){

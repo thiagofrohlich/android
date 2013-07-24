@@ -56,22 +56,22 @@ private class GetHousesTask extends AsyncTask<Object, Object, List<Imovel>>{
 		protected void onPostExecute(List<Imovel> result) {
 			ViewGroup conteudo = (ViewGroup) findViewById(R.id.listagemRelatorio);
 			BigDecimal total = new BigDecimal(0);
-			
-			for (Imovel imovel : result) {
-				View listagem = inflater.inflate(R.layout.lista_relatorio, (ViewGroup) findViewById(R.layout.lista_relatorio));
-				
-				TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
-				TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
-				TextView valor = (TextView) listagem.findViewById(R.id.vlrIm);
-				
-				endereco.setText(imovel.getEndereco());
-				tipo.setText(imovel.getTipo());
-				valor.setText(""+imovel.getValor());
-				
-				total = total.add( new BigDecimal( imovel.getValor() ) ).setScale(2, BigDecimal.ROUND_HALF_UP);
-				conteudo.addView(listagem);
+			if(!result.isEmpty()){
+				for (Imovel imovel : result) {
+					View listagem = inflater.inflate(R.layout.lista_relatorio, (ViewGroup) findViewById(R.layout.lista_relatorio));
+					
+					TextView endereco = (TextView) listagem.findViewById(R.id.enderecoIm);
+					TextView tipo = (TextView) listagem.findViewById(R.id.tipoIm);
+					TextView valor = (TextView) listagem.findViewById(R.id.vlrIm);
+					
+					endereco.setText(imovel.getEndereco());
+					tipo.setText(imovel.getTipo());
+					valor.setText(""+imovel.getValor());
+					
+					total = total.add( new BigDecimal( imovel.getValor() ) ).setScale(2, BigDecimal.ROUND_HALF_UP);
+					conteudo.addView(listagem);
+				}
 			}
-			
 			TextView somatoria = (TextView) findViewById(R.id.somatoria);
 			somatoria.setText(String.valueOf(total.doubleValue()));
 			conector.close();
