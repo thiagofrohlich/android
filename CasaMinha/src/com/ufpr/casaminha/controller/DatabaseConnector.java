@@ -124,7 +124,7 @@ public class DatabaseConnector {
 	
 	public void truncate() {
 		String sql = "DELETE FROM "+ TABLE_HOUSES + ";";
-		Log.d(MainActivity.CATEGORIA, sql);
+		Log.d(MainActivity.FILTRO_LOG, sql);
 		database.execSQL(sql);
 	}
 	
@@ -139,16 +139,16 @@ public class DatabaseConnector {
 		if(valor != null && valor > 0) fValor = true;
 		
 		if(fTipo) {
-			where.append(" tipo='"+ tipo.toUpperCase() + "'");
+			where.append(" tipo='"+ tipo + "'");
 			if(fQuartos || fValor) where.append(" and");
 		}
 		if(fQuartos) {
 			where.append(" qtd_quartos="+ qtdQuartos);
 			if(fValor) where.append(" and");
 		}
-		if(fValor) where.append(" valor="+ valor);
+		if(fValor) where.append(" valor<="+ valor);
 		
-		Log.d(MainActivity.CATEGORIA, where.toString());
+		Log.d(MainActivity.FILTRO_LOG, where.toString());
 		
 		Cursor result = database.query(TABLE_HOUSES, null, where.toString(), null, null, null, "valor");
 		

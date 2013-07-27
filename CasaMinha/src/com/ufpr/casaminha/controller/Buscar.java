@@ -53,7 +53,11 @@ public class Buscar extends Activity {
 		try {
 			qtdQuartosCasa = Integer.parseInt(""+quartosSpinner.getSelectedItem());
 		} catch(NumberFormatException e) {
-			qtdQuartosCasa = null;
+			try {
+				qtdQuartosCasa = Integer.parseInt(""+quartosSpinner.getSelectedItem().toString().substring(0, 1));
+			} catch(NumberFormatException ex) {
+				qtdQuartosCasa = null;
+			}
 		}
 		try {
 			this.valorCasa = Double.parseDouble(valorCasa.getText().toString());
@@ -109,16 +113,16 @@ public class Buscar extends Activity {
 					endereco.setText(imovel.getEndereco());
 					tipo.setText(imovel.getTipo());
 					
-					Log.d(MainActivity.CATEGORIA, ""+ imovel.getId());
+					Log.d(MainActivity.FILTRO_LOG, ""+ imovel.getId());
 					listagem.setId(imovel.getId().intValue());
-					Log.d(MainActivity.CATEGORIA, ""+ listagem.getId());
+					Log.d(MainActivity.FILTRO_LOG, ""+ listagem.getId());
 					
 					listagem.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View view) {
 							
-							Log.i(MainActivity.CATEGORIA, "id view: "+view.getId());
+							Log.i(MainActivity.FILTRO_LOG, "id view: "+view.getId());
 							Intent it = new Intent(view.getContext(), Detalhe.class);
 							it.putExtra("idCasa", view.getId());
 							

@@ -56,7 +56,7 @@ public class Inserir extends Activity {
 		Integer quartos = null;
 		String tipo = (String) ((Spinner) findViewById(R.id.tipo_spinner)).getSelectedItem();
 		Double vCondominio = null;
-		if(tipo.equals("Casa na rua")){
+		if(tipo.equals(Imovel.CASA_NA_RUA)){
 			vCondominio = 0.00;
 		}else{
 			try{

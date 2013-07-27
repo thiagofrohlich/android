@@ -14,7 +14,7 @@ import com.ufpr.casaminha.model.Imovel;
 
 public class MainActivity extends Activity {
 	
-	public static final String CATEGORIA = "CasaMinha";
+	public static final String FILTRO_LOG = "CasaMinha";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +57,17 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Cursor doInBackground(Object... params) {
-			Log.i(CATEGORIA, "populando db");
+			Log.i(FILTRO_LOG, "populando db");
 			
 			conector.open();
 			
 			conector.truncate();
-			conector.insert(new Imovel("CASA NA RUA", 1d, 0d, "AQUELA RUA", 2));
-			conector.insert(new Imovel("CASA NA RUA", 2d, 0d, "AQUELA RUA 2", 2));
-			conector.insert(new Imovel("CASA NA RUA", 3d, 0d, "AQUELA RUA 3", 2));
-			conector.insert(new Imovel("CASA NA RUA", 4d, 0d, "AQUELA RUA 4", 2));
+			conector.insert(new Imovel(Imovel.CASA_NA_RUA, 1d, 0d, "AQUELA RUA", 1));
+			conector.insert(new Imovel(Imovel.CASA_CONDOMINIO, 2d, 0d, "AQUELA RUA 2", 2));
+			conector.insert(new Imovel(Imovel.APARTAMENTO, 3d, 0d, "AQUELA RUA 3", 3));
+			conector.insert(new Imovel(Imovel.CASA_NA_RUA, 4d, 0d, "AQUELA RUA 4", 4));
 			
-			Log.i(CATEGORIA, "db populado");
+			Log.i(FILTRO_LOG, "db populado");
 			return null;
 		}
 		

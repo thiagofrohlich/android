@@ -19,9 +19,9 @@ public class Imovel {
 	public static final String ENDERECO = "endereco";
 	public static final String QTD_QUARTOS = "qtd_quartos";
 	
-	public static final String CASA_NA_RUA = "CASA NA RUA";
-	public static final String CASA_CONDOMINIO = "CASA EM CONDOMÍNIO";
-	public static final String APARTAMENTO = "APARTAMENTO";
+	public static final String CASA_NA_RUA = "Casa na rua";
+	public static final String CASA_CONDOMINIO = "Casa em condomínio";
+	public static final String APARTAMENTO = "Apartamento";
 	
 	private Long id;
 	private String tipo;
