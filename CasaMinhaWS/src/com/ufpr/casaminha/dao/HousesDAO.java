@@ -37,4 +37,8 @@ public class HousesDAO {
 		System.out.println("hue");
 		getEntityManager().persist(house);
 	}
+	
+	public List<House> getAll() {
+		return getEntityManager().createQuery("select h from House h").getResultList();
+	}
 }

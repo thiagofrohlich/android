@@ -101,15 +101,19 @@ public class Detalhe extends Activity {
 			ToggleButton disponibilidade = (ToggleButton) findViewById(R.id.status);
 			Button saveButton = (Button) findViewById(R.id.salvar);
 			
-			tipo.setText(imovel.getTipo());
-			valorCond.setText(""+imovel.getValorCondominio());
-			qtdQuartos.setText(""+ imovel.getQtdQuartos());
-			endereco.setText(imovel.getEndereco());
-			valor.setText(""+imovel.getValor());
-			
-			disponibilidade.setChecked(!imovel.isVendido());
-			disponibilidade.setEnabled(!imovel.isVendido());
-			saveButton.setEnabled(!imovel.isVendido());
+			try {
+				tipo.setText(imovel.getTipo());
+				valorCond.setText(""+imovel.getValorCondominio());
+				qtdQuartos.setText(""+ imovel.getQtdQuartos());
+				endereco.setText(imovel.getEndereco());
+				valor.setText(""+imovel.getValor());
+				
+				disponibilidade.setChecked(!imovel.isVendido());
+				disponibilidade.setEnabled(!imovel.isVendido());
+				saveButton.setEnabled(!imovel.isVendido());
+			} catch (NullPointerException e) {
+				
+			}
 			
 			conector.close();
 		}

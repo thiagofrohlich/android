@@ -2,7 +2,6 @@ package com.ufpr.casaminha;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,22 +11,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ufpr.casaminha.dao.HousesDAO;
-import com.ufpr.casaminha.model.House;
-
 import net.sf.json.JSONObject;
 
+import com.ufpr.casaminha.model.House;
+
 /**
- * Servlet implementation class AllHouses
+ * Servlet implementation class Vender
  */
-@WebServlet("/AllHouses")
-public class AllHouses extends HttpServlet {
+@WebServlet("/Vender")
+public class Vender extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AllHouses() {
+    public Vender() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,30 +41,17 @@ public class AllHouses extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		Buscar casas
+		// TODO Vender
 		
-		HousesDAO dao = new HousesDAO();
-		List<House> casas = dao.getAll();
 		
-//		House casa = new House();
-//		casa.setId(1);
-//		casa.setEndereco("end");
-//		casa.setQtdQuartos(2);
-//		casa.setTipo(House.APARTAMENTO);
-//		casa.setValor(200000);
-//		casa.setValorCondominio(200);
-//		casa.setVendido(false);
-//		casas.add(casa);
-		
-		HashMap<String, List<House>> hm = new HashMap<>();
-		hm.put("message", casas);
+		HashMap<String, String> hm = new HashMap<>();
+		hm.put("sucess", Boolean.toString(true));
 		
 		JSONObject json = JSONObject.fromObject(hm);
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		out.print(json);
 		out.flush();
-
 	}
 
 }

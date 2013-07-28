@@ -1,17 +1,27 @@
 package com.ufpr.casaminha.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.R.bool;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 
 import com.ufpr.casaminha.model.DatabaseOpenHelper;
 import com.ufpr.casaminha.model.Imovel;
+import com.ufpr.casaminha.model.WebService;
 
 public class DatabaseConnector {
 	
@@ -19,6 +29,8 @@ public class DatabaseConnector {
 	private static final String TABLE_HOUSES = "houses";
 	private SQLiteDatabase database;
 	private DatabaseOpenHelper databaseOpenHelper;
+	
+	public static final String URI = "http://192.168.25.6:8080/CasaMinhaWS";
 	
 	public DatabaseConnector(Context context) {
 		databaseOpenHelper = new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
@@ -71,55 +83,82 @@ public class DatabaseConnector {
 	
 	// Buscar todas as casas
 	public List<Imovel> getAll() {
-		Cursor result = database.query(TABLE_HOUSES, null,	null, null, null, null, "valor");
+		WebService webService = new WebService(URI + "/AllHouses");
+		Map params = new HashMap();
+		String response = webService.webGet("", params);
 		
 		List<Imovel> list = null;
-		if(result.getCount() > 0) {
-			result.moveToPosition(0);
-			list = new ArrayList<Imovel>(result.getCount());
-			for(int i=0; i<result.getCount(); i++) {
-				Imovel imovel = new Imovel(result.getLong(result.getColumnIndexOrThrow("_id")));
-				imovel.setEndereco(result.getString(result.getColumnIndexOrThrow("endereco")));
-				imovel.setQtdQuartos(result.getInt(result.getColumnIndexOrThrow("qtd_quartos")));
-				imovel.setTipo(result.getString(result.getColumnIndexOrThrow("tipo")));
-				imovel.setValor(result.getDouble(result.getColumnIndexOrThrow("valor")));
-				imovel.setValorCondominio(result.getDouble(result.getColumnIndexOrThrow("valor_condominio")));
+		try {
+			JSONObject o = new JSONObject(response);
+			JSONArray array = (JSONArray) o.get("message");
+			if(array != null && array.length()> 0) list = new ArrayList<Imovel>();
+			
+			for(int i=0; i < array.length(); i++) {
+				JSONObject imovelJson = (JSONObject) array.get(i);
+				Imovel im = new Imovel();
+				im.setEndereco(imovelJson.getString(Imovel.ENDERECO));
+				im.setId(imovelJson.getLong(Imovel.ID));
+				im.setQtdQuartos(imovelJson.getInt(Imovel.QTD_QUARTOS));
+				im.setTipo(imovelJson.getString(Imovel.TIPO));
+				im.setValor(imovelJson.getDouble(Imovel.VALOR));
+				im.setValorCondominio(imovelJson.getDouble(Imovel.VALOR_CONDOMINIO));
+				im.setVendido(imovelJson.getBoolean("vendido"));
 				
-				list.add(imovel);
-				
-				result.moveToNext();
+				list.add(im);
 			}
+			
+			
+		} catch(JSONException e) {
+			e.printStackTrace();
 		}
+		
+		
 		return list;
 	}
 	
 	// Buscar por id
 	public Imovel getOne(Long id) {
+		WebService webService = new WebService(URI + "/GetOne");
+		Map params = new HashMap();
+		params.put(Imovel.ID, ""+id);
+		String response = webService.webGet("", params);
+		
 		try {
-			Cursor result = database.query(TABLE_HOUSES, null, "_id=" + id, null, null, null, null);
-			result.moveToPosition(0);
+			JSONObject o = new JSONObject(response);
+			JSONObject imovelJson = o.getJSONObject("casa");
 			
 			Imovel imovel = new Imovel();
-			imovel.setId(result.getLong(result.getColumnIndexOrThrow("_id")));
-			imovel.setEndereco(result.getString(result.getColumnIndexOrThrow("endereco")));
-			imovel.setQtdQuartos(result.getInt(result.getColumnIndexOrThrow("qtd_quartos")));
-			imovel.setTipo(result.getString(result.getColumnIndexOrThrow("tipo")));
-			imovel.setValor(result.getDouble(result.getColumnIndexOrThrow("valor")));
-			imovel.setValorCondominio(result.getDouble(result.getColumnIndexOrThrow("valor_condominio")));
-			imovel.setVendido(result.getString(result.getColumnIndexOrThrow("vendido")).equalsIgnoreCase("true") ? true : false);
+			imovel.setEndereco(imovelJson.getString(Imovel.ENDERECO));
+			imovel.setId(imovelJson.getLong(Imovel.ID));
+			imovel.setQtdQuartos(imovelJson.getInt(Imovel.QTD_QUARTOS));
+			imovel.setTipo(imovelJson.getString(Imovel.TIPO));
+			imovel.setValor(imovelJson.getDouble(Imovel.VALOR));
+			imovel.setValorCondominio(imovelJson.getDouble(Imovel.VALOR_CONDOMINIO));
+			imovel.setVendido(imovelJson.getBoolean("vendido"));
 			
 			return imovel;
+		} catch(JSONException e) {
+			return null;
 		} catch(NullPointerException e) {
 			return null;
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
+		
 	}
 	
 	public boolean sell(Long id) {
-		ContentValues args = new ContentValues();
-		args.put("vendido", "true");
-		return database.update(TABLE_HOUSES, args, "_id=" + id, null) > 0;
+		WebService webService = new WebService(URI + "/Vender");
+		Map params = new HashMap();
+		params.put(Imovel.ID, ""+id);
+		String response = webService.webGet("", params);
+		
+		try {
+			JSONObject o = new JSONObject(response);
+			return o.getBoolean("sucess");
+		} catch	(JSONException e) {
+			return false;
+		}
 	}
 	
 	public void truncate() {
@@ -131,44 +170,38 @@ public class DatabaseConnector {
 	public List<Imovel> filtrar(String tipo, Integer qtdQuartos, Double valor) {
 		if(tipo == null && qtdQuartos == null && valor == null) return getAll();
 		
-		StringBuffer where = new StringBuffer();
-		
-		boolean fTipo = false, fQuartos = false, fValor = false;
-		if(tipo != null && !tipo.trim().equals("")) fTipo = true;
-		if(qtdQuartos != null && qtdQuartos > 0) fQuartos = true;
-		if(valor != null && valor > 0) fValor = true;
-		
-		if(fTipo) {
-			where.append(" tipo='"+ tipo + "'");
-			if(fQuartos || fValor) where.append(" and");
-		}
-		if(fQuartos) {
-			where.append(" qtd_quartos="+ qtdQuartos);
-			if(fValor) where.append(" and");
-		}
-		if(fValor) where.append(" valor<="+ valor);
-		
-		Log.d(MainActivity.FILTRO_LOG, where.toString());
-		
-		Cursor result = database.query(TABLE_HOUSES, null, where.toString(), null, null, null, "valor");
+		WebService webService = new WebService(URI + "/Filtrar");
+		Map params = new HashMap();
+		params.put(Imovel.TIPO, tipo);
+		params.put(Imovel.QTD_QUARTOS, ""+qtdQuartos);
+		params.put(Imovel.VALOR, ""+valor);
+		String response = webService.webGet("", params);
 		
 		List<Imovel> list = null;
-		if(result.getCount() > 0) {
-			result.moveToPosition(0);
-			list = new ArrayList<Imovel>(result.getCount());
-			for(int i=0; i<result.getCount(); i++) {
-				Imovel imovel = new Imovel(result.getLong(result.getColumnIndexOrThrow("_id")));
-				imovel.setEndereco(result.getString(result.getColumnIndexOrThrow("endereco")));
-				imovel.setQtdQuartos(result.getInt(result.getColumnIndexOrThrow("qtd_quartos")));
-				imovel.setTipo(result.getString(result.getColumnIndexOrThrow("tipo")));
-				imovel.setValor(result.getDouble(result.getColumnIndexOrThrow("valor")));
-				imovel.setValorCondominio(result.getDouble(result.getColumnIndexOrThrow("valor_condominio")));
+		try {
+			JSONObject o = new JSONObject(response);
+			JSONArray array = (JSONArray) o.get("message");
+			if(array != null && array.length()> 0) list = new ArrayList<Imovel>();
+			
+			for(int i=0; i < array.length(); i++) {
+				JSONObject ImovelJson = (JSONObject) array.get(i);
+				Imovel im = new Imovel();
+				im.setEndereco(ImovelJson.getString(Imovel.ENDERECO));
+				im.setId(ImovelJson.getLong(Imovel.ID));
+				im.setQtdQuartos(ImovelJson.getInt(Imovel.QTD_QUARTOS));
+				im.setTipo(ImovelJson.getString(Imovel.TIPO));
+				im.setValor(ImovelJson.getDouble(Imovel.VALOR));
+				im.setValorCondominio(ImovelJson.getDouble(Imovel.VALOR_CONDOMINIO));
+				im.setVendido(ImovelJson.getBoolean("vendido"));
 				
-				list.add(imovel);
-				
-				result.moveToNext();
+				list.add(im);
 			}
+			
+			
+		} catch(JSONException e) {
+			e.printStackTrace();
 		}
+		
 		return list;
 		
 	}

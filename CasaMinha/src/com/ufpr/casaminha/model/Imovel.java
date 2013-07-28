@@ -12,12 +12,12 @@ package com.ufpr.casaminha.model;
  */
 public class Imovel {
 	
-	public static final String ID = "_id";
+	public static final String ID = "id";
 	public static final String TIPO = "tipo";
 	public static final String VALOR = "valor";
-	public static final String VALOR_CONDOMINIO = "valor_condominio";
+	public static final String VALOR_CONDOMINIO = "valorCondominio";
 	public static final String ENDERECO = "endereco";
-	public static final String QTD_QUARTOS = "qtd_quartos";
+	public static final String QTD_QUARTOS = "qtdQuartos";
 	
 	public static final String CASA_NA_RUA = "Casa na rua";
 	public static final String CASA_CONDOMINIO = "Casa em condomínio";

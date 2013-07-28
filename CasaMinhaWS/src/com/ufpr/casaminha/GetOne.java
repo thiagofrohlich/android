@@ -2,9 +2,7 @@ package com.ufpr.casaminha;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,22 +10,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ufpr.casaminha.dao.HousesDAO;
-import com.ufpr.casaminha.model.House;
-
 import net.sf.json.JSONObject;
 
+import com.ufpr.casaminha.model.House;
+
 /**
- * Servlet implementation class AllHouses
+ * Servlet implementation class GetOne
  */
-@WebServlet("/AllHouses")
-public class AllHouses extends HttpServlet {
+@WebServlet("/GetOne")
+public class GetOne extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AllHouses() {
+    public GetOne() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,30 +40,27 @@ public class AllHouses extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		Buscar casas
+		Long id = Long.parseLong(request.getParameter("id"));
 		
-		HousesDAO dao = new HousesDAO();
-		List<House> casas = dao.getAll();
+//		Buscar casa
+		House casa = new House();
+		casa.setId(1);
+		casa.setEndereco("end");
+		casa.setQtdQuartos(2);
+		casa.setTipo(House.APARTAMENTO);
+		casa.setValor(200000);
+		casa.setValorCondominio(200);
+		casa.setVendido(false);
 		
-//		House casa = new House();
-//		casa.setId(1);
-//		casa.setEndereco("end");
-//		casa.setQtdQuartos(2);
-//		casa.setTipo(House.APARTAMENTO);
-//		casa.setValor(200000);
-//		casa.setValorCondominio(200);
-//		casa.setVendido(false);
-//		casas.add(casa);
-		
-		HashMap<String, List<House>> hm = new HashMap<>();
-		hm.put("message", casas);
+		HashMap<String, House> hm = new HashMap<>();
+		hm.put("casa", casa);
 		
 		JSONObject json = JSONObject.fromObject(hm);
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		out.print(json);
 		out.flush();
-
+		
 	}
 
 }
