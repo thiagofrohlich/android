@@ -49,9 +49,5 @@ public class Teste extends HttpServlet {
 		out.print(json);
 		out.flush();
 	}
-	
-	public void teste(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
 
 }
