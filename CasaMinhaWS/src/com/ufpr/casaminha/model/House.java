@@ -13,9 +13,13 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table( name="houses")
+@Table(name="houses")
 public class House implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public static final String CASA_NA_RUA = "Casa na rua";
+	public static final String CASA_CONDOMINIO = "Casa em condomínio";
+	public static final String APARTAMENTO = "Apartamento";
 
 	@Id
 	@Column(name="_id")
