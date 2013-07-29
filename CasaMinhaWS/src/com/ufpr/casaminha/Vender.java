@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import com.ufpr.casaminha.dao.HousesDAO;
 import com.ufpr.casaminha.model.House;
 
 /**
@@ -42,10 +43,18 @@ public class Vender extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Vender
-		
+		Long id = Long.parseLong(request.getParameter("id"));
 		
 		HashMap<String, String> hm = new HashMap<>();
-		hm.put("sucess", Boolean.toString(true));
+		try {
+			HousesDAO dao = new HousesDAO();
+			dao.vender(id);
+			hm.put("sucess", Boolean.toString(true));
+		}catch(Exception e) {
+			hm.put("sucess", Boolean.toString(false));
+			e.printStackTrace();
+		}
+		
 		
 		JSONObject json = JSONObject.fromObject(hm);
 		response.setContentType("application/json");

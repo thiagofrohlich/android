@@ -48,16 +48,6 @@ public class AllHouses extends HttpServlet {
 		HousesDAO dao = new HousesDAO();
 		List<House> casas = dao.getAll();
 		
-//		House casa = new House();
-//		casa.setId(1);
-//		casa.setEndereco("end");
-//		casa.setQtdQuartos(2);
-//		casa.setTipo(House.APARTAMENTO);
-//		casa.setValor(200000);
-//		casa.setValorCondominio(200);
-//		casa.setVendido(false);
-//		casas.add(casa);
-		
 		HashMap<String, List<House>> hm = new HashMap<>();
 		hm.put("message", casas);
 		
