@@ -45,6 +45,10 @@ public class House implements Serializable {
 	public House() {
 	}
 
+	public House(Long id) {
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}

@@ -65,6 +65,14 @@ public class HousesDAO {
 		update(casa);
 	}
 	
+	public void excluir(Long id) {
+		entityManager = getEntityManager();
+		entityManager.getTransaction().begin();
+		House casa = getOne(id);
+		entityManager.remove(casa);
+		entityManager.getTransaction().commit();
+	}
+	
 	public void update(House house) {
 		entityManager = getEntityManager();
 		entityManager.getTransaction().begin();

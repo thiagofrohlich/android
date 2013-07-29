@@ -126,19 +126,19 @@
                 android:textStyle="bold|italic"
                 android:text="@string/statusLabel" />
 
-            <ToggleButton
-                android:id="@+id/status"
+            <TextView
+                android:id="@+id/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Disponível" />
+                android:textStyle="bold|italic"
+                android:text="@string/vendido" />
 
-            <Button
+            <!-- <Button
                 android:id="@+id/salvar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/salvar"
-                android:onClick="salvarStatus" />
+                android:onClick="salvarStatus" /> -->
             
         </TableRow>
 

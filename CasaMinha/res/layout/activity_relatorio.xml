@@ -10,8 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center_horizontal"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/fundorepeat"
-    tools:context=".Relatorio" >
+    android:background="@drawable/fundorepeat" >
 
     <ScrollView
         android:id="@+id/scrollLista"

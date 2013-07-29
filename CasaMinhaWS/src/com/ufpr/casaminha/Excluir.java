@@ -1,9 +1,7 @@
 package com.ufpr.casaminha;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,22 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import com.ufpr.casaminha.dao.HousesDAO;
 import com.ufpr.casaminha.model.House;
 
 /**
- * Servlet implementation class Vender
+ * Servlet implementation class Excluir
  */
-@WebServlet("/Vender")
-public class Vender extends HttpServlet {
+@WebServlet("/Excluir")
+public class Excluir extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Vender() {
+    public Excluir() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,25 +38,18 @@ public class Vender extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		Long id = Long.parseLong(request.getParameter("id"));
 		
 		HashMap<String, String> hm = new HashMap<>();
 		try {
 			HousesDAO dao = new HousesDAO();
-			dao.vender(id);
+			dao.excluir(id);
 			hm.put("sucess", Boolean.toString(true));
 		}catch(Exception e) {
 			hm.put("sucess", Boolean.toString(false));
 			e.printStackTrace();
 		}
-		
-		
-		JSONObject json = JSONObject.fromObject(hm);
-		response.setContentType("application/json");
-		PrintWriter out = response.getWriter();
-		out.print(json);
-		out.flush();
+
 	}
 
 }

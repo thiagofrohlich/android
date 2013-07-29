@@ -1,15 +1,14 @@
 package com.ufpr.casaminha.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.ufpr.casaminha.R;
 import com.ufpr.casaminha.model.Imovel;
@@ -24,6 +23,7 @@ public class Detalhe extends Activity {
 		setContentView(R.layout.activity_detalhe);
 		
 		Intent it = getIntent();
+		
 		if(it != null) {
 			Bundle pac = it.getExtras();
 			if(pac != null) {
@@ -39,34 +39,81 @@ public class Detalhe extends Activity {
 		return true;
 	}
 	
-	public void salvarStatus(View v) {
-		ToggleButton disponibilidade = (ToggleButton) findViewById(R.id.status);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.vender:
+			vender();
+			return true;
 		
-		if(!disponibilidade.isChecked()) {
-			
-			AsyncTask<Long, Object, Boolean> sellTask = new AsyncTask<Long, Object, Boolean>() {
+		case R.id.excluir:
+			excluir();
+			return true;
+		
+		case R.id.editar:
+			editar(getBaseContext());
+			return true;
 
-				DatabaseConnector conector = new DatabaseConnector(Detalhe.this);				
-				
-				@Override
-				protected Boolean doInBackground(Long... params) {
-					conector.open();
-					return conector.sell(params[0]);
-				}
-				
-				@Override
-				protected void onPostExecute(Boolean result) {
-					if(result) {
-						Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.vendido), Toast.LENGTH_SHORT);
-						toast.show();
-					}
-					finish();
-				}
-				
-			};
-			
-			sellTask.execute(imovel.getId());
+		default:
+			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void vender() {
+		
+		AsyncTask<Long, Object, Boolean> sellTask = new AsyncTask<Long, Object, Boolean>() {
+
+			DatabaseConnector conector = new DatabaseConnector(Detalhe.this);
+			
+			@Override
+			protected Boolean doInBackground(Long... params) {
+				conector.open();
+				return conector.sell(params[0]);
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if(result) {
+					Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.vendido), Toast.LENGTH_SHORT);
+					toast.show();
+				}
+				finish();
+			}
+			
+		};
+		
+		sellTask.execute(imovel.getId());
+	}
+	
+	public void excluir() {
+		AsyncTask<Long, Object, Boolean> deleteTask = new AsyncTask<Long, Object, Boolean>() {
+
+			DatabaseConnector conector = new DatabaseConnector(Detalhe.this);
+			
+			@Override
+			protected Boolean doInBackground(Long... params) {
+				conector.open();
+				return conector.excluir(params[0]);
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if(result) {
+					Toast toast = Toast.makeText(getApplicationContext(),getResources().getString(R.string.removido), Toast.LENGTH_SHORT);
+					toast.show();
+				}
+				finish();
+			}
+			
+		};
+		
+		deleteTask.execute(imovel.getId());
+	}
+	
+	public void editar(Context context) {
+		Intent it = new Intent(context, Inserir.class);
+		it.putExtra("id", imovel.getId());
+		startActivity(it);
 	}
 	
 	private class GetHouseTask extends AsyncTask<Bundle, Object, Imovel> {
@@ -98,8 +145,8 @@ public class Detalhe extends Activity {
 			TextView qtdQuartos = (TextView) findViewById(R.id.qtos);
 			TextView endereco = (TextView) findViewById(R.id.endereco);
 			TextView valor = (TextView)findViewById(R.id.valor);
-			ToggleButton disponibilidade = (ToggleButton) findViewById(R.id.status);
-			Button saveButton = (Button) findViewById(R.id.salvar);
+			TextView disponibilidade = (TextView) findViewById(R.id.statusText);
+//			Button saveButton = (Button) findViewById(R.id.salvar);
 			
 			try {
 				tipo.setText(imovel.getTipo());
@@ -108,9 +155,9 @@ public class Detalhe extends Activity {
 				endereco.setText(imovel.getEndereco());
 				valor.setText(""+imovel.getValor());
 				
-				disponibilidade.setChecked(!imovel.isVendido());
+				disponibilidade.setText(imovel.isVendido() ? getResources().getString(R.string.vendido) : getResources().getString(R.string.disponivel));
 				disponibilidade.setEnabled(!imovel.isVendido());
-				saveButton.setEnabled(!imovel.isVendido());
+//				saveButton.setEnabled(!imovel.isVendido());
 			} catch (NullPointerException e) {
 				
 			}
@@ -119,5 +166,6 @@ public class Detalhe extends Activity {
 		}
 		
 	}
+	
 
 }

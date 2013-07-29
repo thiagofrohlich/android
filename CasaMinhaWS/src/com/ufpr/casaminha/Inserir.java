@@ -1,7 +1,8 @@
+
+
 package com.ufpr.casaminha;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,15 +39,14 @@ public class Inserir extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		House house = new House();
-		house.setEndereco("rua teste");
-		house.setQtdQuartos(1);
-		house.setTipo(House.APARTAMENTO);
-		house.setValor(25555.00);
-		house.setVendido(false);
+		house.setEndereco(request.getParameter("endereco"));
+		house.setQtdQuartos(Integer.parseInt(request.getParameter("qtdQuartos")));
+		house.setTipo(request.getParameter("tipo"));
+		house.setValor(Double.parseDouble(request.getParameter("valor")));
+		house.setValorCondominio(Double.parseDouble(request.getParameter("valorCondominio")));
+		house.setVendido(request.getParameter("vendido").equals("false")? false : true);
 		HousesDAO dao = new HousesDAO();
 		dao.save(house);
-		PrintWriter out = response.getWriter();
-		out.print("<HTML><HEAD><TITLE>HuE</TITLE></HEAD><BODY>TESTE</BODY></HTML>");
 	}
 
 }
