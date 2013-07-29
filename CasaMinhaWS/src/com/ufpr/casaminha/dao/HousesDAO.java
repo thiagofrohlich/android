@@ -9,11 +9,11 @@ import javax.persistence.Persistence;
 import com.ufpr.casaminha.model.House;
 
 public class HousesDAO {
-
+	private EntityManagerFactory factory = null;
+	private EntityManager entityManager = null;
 	
 	private EntityManager getEntityManager() {
-	    EntityManagerFactory factory = null;
-	    EntityManager entityManager = null;
+	   
 	    try {
 	      //Obtém o factory a partir da unidade de persistência.
 	      factory = Persistence.createEntityManagerFactory("CasaMinhaWS");
@@ -35,7 +35,9 @@ public class HousesDAO {
 	
 	public void save(House house){
 		System.out.println("hue");
-		getEntityManager().persist(house);
+		entityManager = getEntityManager();
+		entityManager.persist(house);
+		
 	}
 	
 	public List<House> getAll() {
