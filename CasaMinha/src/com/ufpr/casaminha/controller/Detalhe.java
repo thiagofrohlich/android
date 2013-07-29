@@ -24,6 +24,7 @@ public class Detalhe extends Activity {
 		setContentView(R.layout.activity_detalhe);
 		
 		Intent it = getIntent();
+		
 		if(it != null) {
 			Bundle pac = it.getExtras();
 			if(pac != null) {

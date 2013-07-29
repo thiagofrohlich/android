@@ -18,7 +18,7 @@ public class Imovel {
 	public static final String VALOR_CONDOMINIO = "valorCondominio";
 	public static final String ENDERECO = "endereco";
 	public static final String QTD_QUARTOS = "qtdQuartos";
-	
+	public static final String VENDIDO = "vendido";	
 	public static final String CASA_NA_RUA = "Casa na rua";
 	public static final String CASA_CONDOMINIO = "Casa em condomínio";
 	public static final String APARTAMENTO = "Apartamento";
