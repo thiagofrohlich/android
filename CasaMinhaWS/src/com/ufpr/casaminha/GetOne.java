@@ -3,6 +3,7 @@ package com.ufpr.casaminha;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import com.ufpr.casaminha.dao.HousesDAO;
 import com.ufpr.casaminha.model.House;
 
 /**
@@ -41,16 +43,9 @@ public class GetOne extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Long id = Long.parseLong(request.getParameter("id"));
-		
-//		Buscar casa
-		House casa = new House();
-		casa.setId(1);
-		casa.setEndereco("end");
-		casa.setQtdQuartos(2);
-		casa.setTipo(House.APARTAMENTO);
-		casa.setValor(200000);
-		casa.setValorCondominio(200);
-		casa.setVendido(false);
+
+		HousesDAO dao = new HousesDAO();
+		House casa = dao.getOne(id);
 		
 		HashMap<String, House> hm = new HashMap<>();
 		hm.put("casa", casa);
