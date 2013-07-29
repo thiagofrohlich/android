@@ -36,7 +36,9 @@ public class HousesDAO {
 	public void save(House house){
 		System.out.println("hue");
 		entityManager = getEntityManager();
+		entityManager.getTransaction().begin();
 		entityManager.persist(house);
+		entityManager.getTransaction().commit();
 		
 	}
 	
