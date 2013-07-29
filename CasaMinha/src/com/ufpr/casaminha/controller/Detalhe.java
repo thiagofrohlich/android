@@ -112,7 +112,8 @@ public class Detalhe extends Activity {
 	
 	public void editar(Context context) {
 		Intent it = new Intent(context, Inserir.class);
-		it.putExtra("id", imovel.getId());
+		it.putExtra("idCasa", imovel.getId());
+		
 		startActivity(it);
 	}
 	

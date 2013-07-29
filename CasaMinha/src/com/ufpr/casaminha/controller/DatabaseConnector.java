@@ -30,7 +30,7 @@ public class DatabaseConnector {
 	private SQLiteDatabase database;
 	private DatabaseOpenHelper databaseOpenHelper;
 	
-	public static final String URI = "http://192.168.137.1:8080/CasaMinhaWS";
+	public static final String URI = "http://192.168.25.6:8080/CasaMinhaWS";
 	
 	public DatabaseConnector(Context context) {
 		databaseOpenHelper = new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
