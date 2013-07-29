@@ -51,12 +51,29 @@ public class HousesDAO {
 	}
 	
 	public List<House> filtrar(String tipo, Integer qtdQuartos, Double valor) {
+		if(tipo == null && qtdQuartos == null && valor == null) return getAll();
 		StringBuilder hql = new StringBuilder("select h from House h ");
-		if(tipo != null || qtdQuartos != null || valor != null) {
-			hql.append("where ");
-		}
 		
-		return null;
+		boolean fTipo = false, fQuartos = false, fValor = false;
+		if(tipo != null && !tipo.trim().equals("")) fTipo = true;
+		if(qtdQuartos != null && qtdQuartos > 0) fQuartos = true;
+		if(valor != null && valor > 0) fValor = true;
+		
+		if(fTipo || fQuartos || fValor) hql.append(" where");
+
+		if(fTipo) {
+			hql.append(" tipo='"+ tipo + "'");
+			if(fQuartos || fValor) hql.append(" and");
+		}
+		if(fQuartos) {
+			hql.append(" qtdQuartos="+ qtdQuartos);
+			if(fValor) hql.append(" and");
+		}
+		if(fValor) hql.append(" valor<="+ valor);
+		
+		System.out.println(hql.toString());
+		return getEntityManager().createQuery(hql.toString()).getResultList();
+//		return null;
 	}
 	
 	public void vender(Long id) {

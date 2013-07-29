@@ -9,14 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.bool;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 
 import com.ufpr.casaminha.model.DatabaseOpenHelper;
@@ -25,27 +21,22 @@ import com.ufpr.casaminha.model.WebService;
 
 public class DatabaseConnector {
 	
-	private static final String DATABASE_NAME = "HousesDatabase";
-	private static final String TABLE_HOUSES = "houses";
-	private SQLiteDatabase database;
-	private DatabaseOpenHelper databaseOpenHelper;
-	
 	public static final String URI = "http://192.168.25.6:8080/CasaMinhaWS";
 	
 	public DatabaseConnector(Context context) {
-		databaseOpenHelper = new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
+//		databaseOpenHelper = new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
 	}
 	
 	// Abre conexão
 	public void open() throws SQLException {
 		// Cria ou abre DB para leitura / escrita
-		database = databaseOpenHelper.getWritableDatabase();
+//		database = databaseOpenHelper.getWritableDatabase();
 	}
 	
 	// Fecha conexão
 	public void close() {
-		if(database != null)
-			database.close();
+//		if(database != null)
+//			database.close();
 	}
 	
 	// Inserir Casa
@@ -75,7 +66,7 @@ public class DatabaseConnector {
 		house.put("qtd_quartos", qtdQuartos);
 		
 		open();
-		database.update(TABLE_HOUSES, house, "_id="+ id, null);
+//		database.update(TABLE_HOUSES, house, "_id="+ id, null);
 		close();
 		
 	}
@@ -175,9 +166,9 @@ public class DatabaseConnector {
 	}
 	
 	public void truncate() {
-		String sql = "DELETE FROM "+ TABLE_HOUSES + ";";
-		Log.d(MainActivity.FILTRO_LOG, sql);
-		database.execSQL(sql);
+//		String sql = "DELETE FROM "+ TABLE_HOUSES + ";";
+//		Log.d(MainActivity.FILTRO_LOG, sql);
+//		database.execSQL(sql);
 	}
 	
 	public List<Imovel> filtrar(String tipo, Integer qtdQuartos, Double valor) {
