@@ -56,18 +56,17 @@ public class DatabaseConnector {
 	}
 	
 	// Editar Casa
-	public void update(Long id, String tipo, Double valor, Double valorCondominio, String endereco, Integer qtdQuartos) {
-		
-		ContentValues house = new ContentValues();
-		house.put("tipo", tipo);
-		house.put("valor", valor);
-		house.put("valor_condominio", valorCondominio);
-		house.put("endereco", endereco);
-		house.put("qtd_quartos", qtdQuartos);
-		
-		open();
-//		database.update(TABLE_HOUSES, house, "_id="+ id, null);
-		close();
+	public void update(Imovel imovel) {
+		WebService webService = new WebService(URI + "/Update");
+		Map newHouse = new HashMap();
+		newHouse.put(Imovel.TIPO, ""+imovel.getTipo());
+		newHouse.put(Imovel.VALOR, ""+imovel.getValor());
+		newHouse.put(Imovel.VALOR_CONDOMINIO, ""+imovel.getValorCondominio());
+		newHouse.put(Imovel.ENDERECO, imovel.getEndereco());
+		newHouse.put(Imovel.QTD_QUARTOS, ""+imovel.getQtdQuartos());
+		newHouse.put(imovel.VENDIDO, "false");
+		newHouse.put("id", ""+imovel.getId());
+		String response = webService.webGet("", newHouse);
 		
 	}
 	

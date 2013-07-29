@@ -1,17 +1,20 @@
 package com.ufpr.casaminha.controller;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ufpr.casaminha.R;
@@ -131,7 +134,8 @@ public class Inserir extends Activity {
 	}
 
 	private class GetHouseTask extends AsyncTask<Bundle, Object, Imovel> {
-
+		Long id = null;
+		Imovel imovel;
 		DatabaseConnector conector = new DatabaseConnector(Inserir.this);
 		
 		@Override
@@ -148,16 +152,18 @@ public class Inserir extends Activity {
 		
 		@Override
 		protected void onPostExecute(Imovel result) {
-
+			
 			if(result == null) {
 				finish();
 			}
 			
 			imovel = result;
+			id = imovel.getId();
 			Spinner spinnerTipo = (Spinner) findViewById(R.id.tipo_spinner);
+			ArrayList<String> tipos = new ArrayList<String>();
 			ArrayAdapter<CharSequence> tipoAdapter = ArrayAdapter.createFromResource(Inserir.this,  R.array.tipo_arrays, android.R.layout.simple_spinner_item);
-			Integer posicao =  tipoAdapter.getPosition(imovel.getTipo());
 			spinnerTipo.setAdapter(tipoAdapter);
+			Integer posicao =  tipoAdapter.getPosition(imovel.getTipo());
 			spinnerTipo.setSelection(posicao);
 			spinnerTipo.setOnItemSelectedListener(new OnItemSelectedListener(){
 				@Override
@@ -169,13 +175,13 @@ public class Inserir extends Activity {
 						vCondominio.setEnabled(false);
 					}else{
 						EditText vCondominio = (EditText) findViewById(R.id.valorC);
-						vCondominio.setText(""+imovel.getValorCondominio());
 						vCondominio.setEnabled(true);
 					}
 				}
 				@Override
 				public void onNothingSelected(AdapterView<?> arg0) {}
 			});
+
 			
 			
 			try {
@@ -185,18 +191,88 @@ public class Inserir extends Activity {
 				Integer qtdade = quartosAdapter.getPosition(imovel.getQtdQuartos().equals(4)? "4 ou mais" : ""+imovel.getQtdQuartos());
 				quartos.setSelection(qtdade);
 				
-				TextView endereco = (TextView) findViewById(R.id.endereco);
+				EditText endereco = (EditText) findViewById(R.id.endereco);
 				endereco.setText(imovel.getEndereco());
 				
-				TextView valor = (TextView) findViewById(R.id.valor_et);
+				EditText valorCond = (EditText) findViewById(R.id.valorC);
+				valorCond.setText(""+imovel.getValorCondominio());
+				
+				EditText valor = (EditText) findViewById(R.id.valor_et);
 				valor.setText(""+imovel.getValor());
+				
+				Button btn = (Button) findViewById(R.id.status);
+				btn.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View view){
+						boolean erro = false;
+						String mensagem = "";
+						Double valor = null;
+						Integer quartos = null;
+						String tipo = (String) ((Spinner) findViewById(R.id.tipo_spinner)).getSelectedItem();
+						Double vCondominio = null;
+						if(tipo.equals(Imovel.CASA_NA_RUA)){
+							vCondominio = 0.00;
+						}else{
+							try{
+								vCondominio = Double.parseDouble(((EditText) findViewById(R.id.valorC)).getText().toString());
+							}catch(Exception e){
+								erro = true;
+								mensagem = "Insira um valor de condomínio válido\n";
+							}
+						}
+						String endereco = ((EditText) findViewById(R.id.endereco)).getText().toString();
+						if(endereco.equals("")){
+							erro = true;
+							mensagem = mensagem + "Insira um endereço válido\n";
+						}
+						
+							quartos = Integer.parseInt(((String) ((Spinner) findViewById(R.id.qtos_spinner)).getSelectedItem()).substring(0, 1));
+						
+						try{
+							valor = Double.parseDouble(((EditText) findViewById(R.id.valor_et)).getText().toString());
+						}catch (Exception e){
+							erro = true;
+							mensagem = mensagem+"Insira um valor de venda válido";
+						}
+						if(!erro){
+							imovel = new Imovel(tipo, valor, vCondominio, endereco, quartos);
+							imovel.setId(id);
+							AsyncTask<Object, Object, Object> saveTask = new AsyncTask<Object, Object, Object>(){
+								
+								@Override
+								protected Object doInBackground(Object... params) {
+									update();
+									return null;
+								}
+								@Override
+								protected void onPostExecute(Object result){
+									finish();
+								}
+								
+							};
+							saveTask.execute((Object[]) null);
+							mensagem = "Imóvel salvo";
+						}
+						Toast toast = Toast.makeText(getApplicationContext(),mensagem, Toast.LENGTH_SHORT);
+						toast.show();
+						
+						
+						
+					}
+				});				
 			} catch (NullPointerException e) {
 				
 			}
 			
-			
 		}
 		
+		public void update(){
+			
+			DatabaseConnector dbConnector = new DatabaseConnector(Inserir.this);
+			dbConnector.update(imovel);
+		
+		}			
 	}
 	
 	

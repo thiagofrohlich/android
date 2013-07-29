@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ufpr.casaminha.dao.HousesDAO;
-import com.ufpr.casaminha.model.House;
 
 /**
  * Servlet implementation class Excluir

@@ -52,9 +52,7 @@ public class Imovel {
 		return tipo;
 	}
 	public void setTipo(String tipo) {
-		if(tipo != null)
-			this.tipo = tipo.trim().toUpperCase();
-		else this.tipo = tipo;
+		this.tipo = tipo;
 	}
 	public Double getValor() {
 		return valor;
@@ -72,9 +70,7 @@ public class Imovel {
 		return endereco;
 	}
 	public void setEndereco(String endereco) {
-		if(endereco != null)
-			this.endereco = endereco.trim().toUpperCase();
-		else this.endereco = endereco;
+		this.endereco = endereco;
 	}
 	public Integer getQtdQuartos() {
 		return qtdQuartos;
